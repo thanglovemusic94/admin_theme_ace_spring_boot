@@ -1,5 +1,8 @@
 package com.example.websitebanhang.configs;
 
+import nz.net.ultraq.thymeleaf.LayoutDialect;
+import nz.net.ultraq.thymeleaf.decorators.strategies.GroupingStrategy;
+import org.codehaus.groovy.runtime.ArrayUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
@@ -32,7 +35,7 @@ public class ThymeleafConfigs implements WebMvcConfigurer {
     public ClassLoaderTemplateResolver templateResolver() {
         var templateResolver = new ClassLoaderTemplateResolver();
 //        templateResolver.setPrefix("/templates/");
-        templateResolver.setPrefix("/templates/ace-master/");
+        templateResolver.setPrefix("/templates/");
         templateResolver.setCacheable(false);
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -45,6 +48,7 @@ public class ThymeleafConfigs implements WebMvcConfigurer {
     public SpringTemplateEngine templateEngine() {
         var templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
+        templateEngine.addDialect(new LayoutDialect(new GroupingStrategy()));
         return templateEngine;
     }
 
@@ -53,9 +57,10 @@ public class ThymeleafConfigs implements WebMvcConfigurer {
     public ViewResolver viewResolver() {
         var viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
-        viewResolver.setCharacterEncoding("UTF-8");
+//        viewResolver.setViewNames((String[]) ArrayUtil.createArray("*.html"));
         return viewResolver;
     }
+
 
 
 }

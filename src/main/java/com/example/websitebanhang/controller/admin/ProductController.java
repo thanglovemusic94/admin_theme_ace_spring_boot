@@ -26,10 +26,10 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<?> createFaq(ProductDto productDto) {
+    public ResponseEntity<Product> createFaq(ProductDto productDto) {
         Product product = modelMapper.map(productDto, Product.class);
         productRepository.save(product);
-        return ResponseEntity.ok("thanh cong");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

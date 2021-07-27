@@ -169,7 +169,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-2">
                             <div class="text-center">
-                                <img height="150" class="thumbnail inline no-margin-bottom" alt="Domain Owner's Avatar" th:src="@{/assets/images/avatars/profile-pic.jpg}" />
+                                <img height="150" class="thumbnail inline no-margin-bottom" alt="Domain Owner's Avatar" th:src="@{/images/avatars/profile-pic.jpg}" />
                                 <br />
                                 <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
                                     <div class="inline position-relative">
@@ -279,23 +279,24 @@
     <script type="text/javascript">
         /*<![CDATA[*/
 
-        $(document).ready(function () {
+        $(document).ready(function (e) {
             $("#addProduct").submit(function (event) {
                 event.preventDefault();
-                handleSubmit();
+                let formData = $("#addProduct").serialize();
+                handleSubmit(formData);
             });
 
         });
 
-        function handleSubmit() {
+        function handleSubmit(data) {
             $.ajax({
                 url: "/product",
-                data: $('#addProduct').serialize(),
+                data: data,
                 type: "POST",
                 dataType: 'json',
                 cache: false,
                 timeout: 600000,
-                success: function() { alert('Success!'); }
+                success: function(res) { alert('Success!' + res.data); }
             });
         }
 

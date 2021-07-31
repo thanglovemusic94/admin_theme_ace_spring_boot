@@ -14,7 +14,6 @@ public class HomeController {
 
     @GetMapping("/product")
     public String index(Model model){
-        model.addAttribute("product", new ProductDto());
         return "/admin/product/index";
     }
 

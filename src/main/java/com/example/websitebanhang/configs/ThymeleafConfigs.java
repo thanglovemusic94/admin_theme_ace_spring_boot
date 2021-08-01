@@ -1,5 +1,6 @@
 package com.example.websitebanhang.configs;
 
+import lombok.var;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import nz.net.ultraq.thymeleaf.decorators.strategies.GroupingStrategy;
 import org.springframework.context.annotation.Bean;

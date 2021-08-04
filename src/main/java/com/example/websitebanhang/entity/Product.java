@@ -20,7 +20,13 @@ public  class Product extends AbstractClass {
     private String name;
     private int price;
     private Long discount;
+    private String description;
+    private String code;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "catalogType_id")
+    private CatalogType catalogTypes;
+    
     @OneToMany(mappedBy = "product")
     Set<ProductProperty> products;
 }

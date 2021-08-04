@@ -3,22 +3,24 @@ package com.example.websitebanhang.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table
-public class Product {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@SuperBuilder
+public  class Product extends AbstractClass {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     private String name;
-    private String price;
-//    private Long size;
-//    private String color;
-//    private Long discount;
+    private int price;
+    private Long discount;
+
+    @OneToMany(mappedBy = "product")
+    Set<ProductProperty> products;
 }

@@ -275,6 +275,8 @@
 </div><!-- /.col -->
 
 <th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <!-- inline scripts related to this page -->
     <script type="text/javascript">
         /*<![CDATA[*/
@@ -282,24 +284,15 @@
         $(document).ready(function (e) {
             $("#addProduct").submit(function (event) {
                 event.preventDefault();
-                let formData = $("#addProduct").serialize();
-                handleSubmit(formData);
+                axios.post('/product', $("#addProduct").serialize())
+                    .then(function (response) {
+                        console.log(response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
             });
-
         });
-
-        function handleSubmit(data) {
-            $.ajax({
-                url: "/product",
-                data: data,
-                type: "POST",
-                dataType: 'json',
-                cache: false,
-                timeout: 600000,
-                success: function(res) { alert('Success!' + res.data); }
-            });
-        }
-
 
         jQuery(function($) {
             //table checkboxes

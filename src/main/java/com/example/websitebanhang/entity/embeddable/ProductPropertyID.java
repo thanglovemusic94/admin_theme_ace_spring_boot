@@ -1,4 +1,4 @@
-package com.example.websitebanhang.entity;
+package com.example.websitebanhang.entity.embeddable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +16,9 @@ import java.io.Serializable;
 public class ProductPropertyID implements Serializable {
 
     @Column(name = "product_id")
-    private Long productId;
+    private int productId;
 
     @Column(name = "property_id")
-    private Long propertyId;
+    private int propertyId;
+
 }

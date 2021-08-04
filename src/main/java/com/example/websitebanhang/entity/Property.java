@@ -17,11 +17,9 @@ import java.util.Set;
 @Table
 public class Property extends AbstractClass{
 
-    private String name;
+    private String name; // color or size
 
-    private String value;
-
-    private int amount;
+    private String value; // value color or size
 
     @OneToMany(mappedBy = "property")
     Set<ProductProperty> property;

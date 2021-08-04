@@ -3,7 +3,6 @@ package com.example.websitebanhang.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -13,9 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@SuperBuilder
-public  class Product extends AbstractClass {
+public class Product extends AbstractClass {
 
     private String name;
     private int price;
@@ -23,9 +20,9 @@ public  class Product extends AbstractClass {
     private String description;
     private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "catalogType_id")
-    private CatalogType catalogTypes;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
     
     @OneToMany(mappedBy = "product")
     Set<ProductProperty> products;

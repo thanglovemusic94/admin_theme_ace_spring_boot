@@ -1,5 +1,6 @@
 package com.example.websitebanhang.entity;
 
+import com.example.websitebanhang.entity.embeddable.ProductPropertyID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

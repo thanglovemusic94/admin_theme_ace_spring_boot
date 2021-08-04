@@ -16,6 +16,6 @@ import java.io.Serializable;
 @Data
 public class ProductSizeKey implements Serializable {
 
-    private long product_id;
-    private long size_id;
+    private long productId;
+    private long sizeId;
 }

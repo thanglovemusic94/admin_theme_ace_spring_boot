@@ -18,12 +18,12 @@ public class ProductSize implements Serializable {
     private ProductSizeKey id;
 
     @ManyToOne
-    @MapsId("product_id")
+    @MapsId("productId")
     @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne
-    @MapsId("size_id")
+    @MapsId("sizeId")
     @JoinColumn(name = "size_id")
     private Size size;
 }

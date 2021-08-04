@@ -13,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CatalogType extends Base{
-    private String CatalogTypeCode;
-    private String CatalogTypeName;
-    private String CatalogTypeImage;
+    private String code;
+    private String name;
+    private String image;
     private String gender;
 
     @OneToMany(mappedBy = "catalogTypes", fetch = FetchType.LAZY)

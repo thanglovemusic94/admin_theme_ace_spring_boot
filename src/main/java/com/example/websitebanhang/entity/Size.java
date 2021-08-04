@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Size extends Base{
-    private String size;
+    private int size;
 
     @OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
     private List<ProductSize> productSizeList;

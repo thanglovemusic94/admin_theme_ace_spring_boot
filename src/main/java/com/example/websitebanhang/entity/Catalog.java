@@ -16,9 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Catalog extends Base{
-    private String catalogName;
-    private String catalogCode;
-    private String catalogImage;
+    private String name;
+    private String code;
+    private String image;
 
     @OneToMany(mappedBy = "catalogList", fetch = FetchType.LAZY)
     private List<CatalogType> catalogTypeList;

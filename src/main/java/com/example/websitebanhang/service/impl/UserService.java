@@ -37,7 +37,7 @@ public class UserService implements IUserService {
 
     private final IRoleRepository roleRepository;
 
-    private final IVerificationTokenRepository tokenRepository;
+    //private final IVerificationTokenRepository tokenRepository;
 
     public UserService(AuthenticationManager authenticationManager,
                        JwtUtils jwtUtils, IUserRepository userRepository,
@@ -49,17 +49,17 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.roleRepository = roleRepository;
-        this.tokenRepository = tokenRepository;
+        //this.tokenRepository = tokenRepository;
     }
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-
-        return UserDetailsImpl.build(user);
-    }
+//    @Override
+//    @Transactional
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+//
+//        return UserDetailsImpl.build(user);
+//    }
 
 
     @Override
@@ -101,21 +101,21 @@ public class UserService implements IUserService {
     public void saveRegisteredUser(User user) {
         userRepository.save(user);
     }
-
-    @Override
-    public User getUser(String verificationToken) {
-        User user = tokenRepository.findByToken(verificationToken).getUser();
-        return user;
-    }
-
-    @Override
-    public void createVerificationToken(User user, String token) {
-        VerificationToken myToken = new VerificationToken(token, user);
-        tokenRepository.save(myToken);
-    }
-
-    @Override
-    public VerificationToken getVerificationToken(String VerificationToken) {
-        return tokenRepository.findByToken(VerificationToken);
-    }
+//
+//    @Override
+//    public User getUser(String verificationToken) {
+//        User user = tokenRepository.findByToken(verificationToken).getUser();
+//        return user;
+//    }
+//
+//    @Override
+//    public void createVerificationToken(User user, String token) {
+//        VerificationToken myToken = new VerificationToken(token, user);
+//        tokenRepository.save(myToken);
+//    }
+//
+//    @Override
+//    public VerificationToken getVerificationToken(String VerificationToken) {
+//        return tokenRepository.findByToken(VerificationToken);
+//    }
 }

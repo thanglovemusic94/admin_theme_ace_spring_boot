@@ -1,6 +1,7 @@
 package com.example.websitebanhang.security;
 
 
+import com.example.websitebanhang.service.impl.JwtUserservice;
 import com.example.websitebanhang.service.impl.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserService userDetailsService;
 
+	@Autowired
+	private JwtUserservice jwtUserservice;
+
 	private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
 	@Override
@@ -35,7 +39,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 			if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
 				String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
-				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+				UserDetails userDetails = jwtUserservice.loadUserByUsername(username);
 				UsernamePasswordAuthenticationToken authentication
 						= new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface IUserService extends UserDetailsService {
+public interface IUserService {
 
     JwtResponse login(LoginDTO loginDTO) throws JsonProcessingException;
 

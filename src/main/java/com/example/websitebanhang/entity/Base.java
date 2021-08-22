@@ -11,12 +11,11 @@ import java.util.Date;
 
 @MappedSuperclass
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class AbstractClass {
+public class Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(updatable = false)
     @CreationTimestamp

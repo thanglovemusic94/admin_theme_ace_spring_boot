@@ -3,7 +3,8 @@ package com.example.websitebanhang.configs;
 
 import com.example.websitebanhang.security.AuthEntryPointJwt;
 import com.example.websitebanhang.security.AuthTokenFilter;
-import com.example.websitebanhang.service.impl.user.UserDetailsServiceImpl;
+import com.example.websitebanhang.service.IUserService;
+import com.example.websitebanhang.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	UserDetailsServiceImpl userDetailsService;
+	IUserService userService;
 
 	@Autowired
 	private AuthEntryPointJwt unauthorizedHandler;
@@ -40,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 			authenticationManagerBuilder
-					.userDetailsService(userDetailsService)
+					.userDetailsService(userService)
 					.passwordEncoder(passwordEncoder());
 	}
 

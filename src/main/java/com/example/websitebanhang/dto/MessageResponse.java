@@ -1,4 +1,4 @@
-package com.example.websitebanhang.dto.user;
+package com.example.websitebanhang.dto;
 
 public class MessageResponse {
 	private String message;

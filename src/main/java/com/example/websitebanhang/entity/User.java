@@ -2,7 +2,6 @@ package com.example.websitebanhang.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,16 +15,19 @@ import java.util.Set;
     @UniqueConstraint(columnNames = "email")
 })
 @AllArgsConstructor
-@NoArgsConstructor
-public class User extends Base {
 
+public class User extends Base {
+    public User() {
+        super();
+        this.enabled=false;
+    }
     private String username;
     @Email
     private String email;
 
     private String password;
 
-
+    private boolean enabled;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(	name = "user_roles",
@@ -39,4 +41,6 @@ public class User extends Base {
         this.email = email;
         this.password = password;
     }
+
+
 }

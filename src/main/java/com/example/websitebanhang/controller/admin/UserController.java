@@ -1,91 +1,92 @@
 package com.example.websitebanhang.controller.admin;
 
+import com.example.websitebanhang.dto.MessageResponse;
 import com.example.websitebanhang.dto.user.JwtResponse;
 import com.example.websitebanhang.dto.user.LoginDTO;
-
-import com.example.websitebanhang.dto.user.MessageResponse;
 import com.example.websitebanhang.dto.user.SignupRequest;
-import com.example.websitebanhang.entity.ERole;
-import com.example.websitebanhang.entity.Role;
 import com.example.websitebanhang.entity.User;
-import com.example.websitebanhang.security.JwtUtils;
-import com.example.websitebanhang.repository.RoleRepository;
-import com.example.websitebanhang.repository.UserRepository;
+import com.example.websitebanhang.registration.OnRegistrationCompleteEvent;
+import com.example.websitebanhang.service.IUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    final IUserService userService;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final MessageSource messages;
 
-    @Autowired
-    JwtUtils jwtUtils;
+    final  ApplicationEventPublisher eventPublisher;
 
-    @Autowired
-    UserRepository userRepository;
+    private String getAppUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
 
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
+    public UserController(IUserService userService, MessageSource messages, ApplicationEventPublisher eventPublisher) {
+        this.userService = userService;
+        this.messages = messages;
+        this.eventPublisher = eventPublisher;
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDTO) throws JsonProcessingException {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
-
-        SecurityContextHolder.getContext().getAuthentication().getDetails();
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        JwtResponse jwtResponse = userService.login(loginDTO);
+        return ResponseEntity.ok(jwtResponse);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
-        }
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, HttpServletRequest request) throws Exception {
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
-        }
+        User user = userService.registerNewUserAccount(signUpRequest);
 
-        // Create new user's account
-        User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
+        String appUrl = request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user,request.getLocale(), appUrl));
 
-
-        Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                .orElseGet(() -> {
-                    Role role = new Role();
-                    role.setName(ERole.ROLE_USER);
-                    return role;
-                });
-
-        roles.add(userRole);
-        user.setRoles(roles);
-        userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+    @GetMapping("/regitrationConfirm")
+    public String confirmRegistration
+            (WebRequest request, Model model, @RequestParam("token") String token) {
+
+        LOGGER.trace("=================getAppUrl======================");
+        LOGGER.info(getAppUrl((HttpServletRequest) request));
+        LOGGER.trace("=======================================");
+
+//        Locale locale = request.getLocale();
+//
+//        VerificationToken verificationToken = userService.getVerificationToken(token);
+//        if (verificationToken == null) {
+//            String message = messages.getMessage("auth.message.invalidToken", null, locale);
+//            model.addAttribute("message", message);
+//            return "redirect:/badUser.html?lang=" + locale.getLanguage();
+//        }
+//
+//        User user = verificationToken.getUser();
+//        Calendar cal = Calendar.getInstance();
+//        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+//            String messageValue = messages.getMessage("auth.message.expired", null, locale);
+//            model.addAttribute("message", messageValue);
+//            return "redirect:/badUser.html?lang=" + locale.getLanguage();
+//        }
+//
+//        user.setEnabled(true);
+//        userService.saveRegisteredUser(user);
+//        return "redirect:/login.html?lang=" + request.getLocale().getLanguage();
+        return  "1";
+    }
+
 }

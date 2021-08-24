@@ -7,11 +7,10 @@ import com.example.websitebanhang.entity.User;
 import com.example.websitebanhang.entity.VerificationToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface IUserService {
+public interface IUserService extends UserDetailsService{
 
     JwtResponse login(LoginDTO loginDTO) throws JsonProcessingException;
 

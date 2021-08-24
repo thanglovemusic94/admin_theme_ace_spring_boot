@@ -5,7 +5,6 @@ import com.example.websitebanhang.security.AuthEntryPointJwt;
 import com.example.websitebanhang.security.AuthTokenFilter;
 import com.example.websitebanhang.service.IUserService;
 import com.example.websitebanhang.service.impl.JwtUserservice;
-import com.example.websitebanhang.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +27,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 		prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//	@Autowired
-//	IUserService userService;
+	@Autowired
+	IUserService userService;
 
 	@Autowired
 	JwtUserservice jwtUserservice;
@@ -45,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 			authenticationManagerBuilder
-					.userDetailsService(jwtUserservice)
+					.userDetailsService(userService)
 					.passwordEncoder(passwordEncoder());
 	}
 

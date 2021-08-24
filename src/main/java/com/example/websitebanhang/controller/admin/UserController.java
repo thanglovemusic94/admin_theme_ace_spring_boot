@@ -6,6 +6,7 @@ import com.example.websitebanhang.dto.user.LoginDTO;
 import com.example.websitebanhang.dto.user.SignupRequest;
 import com.example.websitebanhang.entity.User;
 import com.example.websitebanhang.registration.OnRegistrationCompleteEvent;
+import com.example.websitebanhang.registration.listener.RegistrationListener;
 import com.example.websitebanhang.service.IUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
@@ -24,21 +25,24 @@ import javax.validation.Valid;
 @RequestMapping("/api/auth")
 public class UserController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-    final IUserService userService;
+    private final IUserService userService;
 
     private final MessageSource messages;
 
-    final  ApplicationEventPublisher eventPublisher;
+    private final  ApplicationEventPublisher eventPublisher;
 
-    private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-    }
+    private final RegistrationListener registrationListener;
 
-    public UserController(IUserService userService, MessageSource messages, ApplicationEventPublisher eventPublisher) {
+    public UserController(IUserService userService, MessageSource messages, ApplicationEventPublisher eventPublisher, RegistrationListener registrationListener) {
         this.userService = userService;
         this.messages = messages;
         this.eventPublisher = eventPublisher;
+        this.registrationListener = registrationListener;
     }
+
+//    private String getAppUrl(HttpServletRequest request) {
+//        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+//    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDTO) throws JsonProcessingException {
@@ -52,19 +56,16 @@ public class UserController {
         User user = userService.registerNewUserAccount(signUpRequest);
 
         String appUrl = request.getContextPath();
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user,request.getLocale(), appUrl));
-
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
     @GetMapping("/regitrationConfirm")
     public String confirmRegistration
-            (WebRequest request, Model model, @RequestParam("token") String token) {
+            (WebRequest request, Model model, @RequestParam(value = "token", required = false) String token) {
 
-        LOGGER.trace("=================getAppUrl======================");
-        LOGGER.info(getAppUrl((HttpServletRequest) request));
-        LOGGER.trace("=======================================");
+
 
 //        Locale locale = request.getLocale();
 //
@@ -86,7 +87,8 @@ public class UserController {
 //        user.setEnabled(true);
 //        userService.saveRegisteredUser(user);
 //        return "redirect:/login.html?lang=" + request.getLocale().getLanguage();
-        return  "1";
+       // return  "email-template-thymeleaf";
+        return  "login";
     }
 
 }

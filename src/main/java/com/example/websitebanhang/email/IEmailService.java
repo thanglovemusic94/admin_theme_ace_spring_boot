@@ -6,11 +6,11 @@ import java.util.Map;
 
 public interface IEmailService {
 
-    void sendSimpleMessage(String to,String subject, String text);
+    void sendSimpleMessage(String to,String subject, String text) throws MessagingException;
 
 
 
-    void sendSimpleMessageUsingTemplate(String to, String subject, String... templateModel);
+    void sendSimpleMessageUsingTemplate(String to, String subject, String... templateModel) throws MessagingException;
 
 
 

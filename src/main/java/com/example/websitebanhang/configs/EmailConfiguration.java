@@ -1,103 +1,49 @@
 package com.example.websitebanhang.configs;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.Properties;
 
-@ComponentScan(basePackages = { "com.baeldung.spring.mail" })
-@PropertySource(value={"classpath:application-email.properties"})
+@Configuration
+@ComponentScan(basePackages = { "com.example.websitebanhang.configs" })
+//@PropertySource(value={"classpath:email/emailconfig.properties"})
 public class EmailConfiguration {
-    @Value("${spring.mail.host}")
-    private String mailServerHost;
 
-    @Value("${spring.mail.port}")
-    private Integer mailServerPort;
-
-    @Value("${spring.mail.username}")
-    private String mailServerUsername;
-
-    @Value("${spring.mail.password}")
-    private String mailServerPassword;
-
-    @Value("${spring.mail.properties.mail.smtp.auth}")
-    private String mailServerAuth;
-
-    @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
-    private String mailServerStartTls;
-
-    @Value("${spring.mail.templates.path}")
-    private String mailTemplatesPath;
+    private static final String Host = "smtp.gmail.com";
+    private static final Integer Port = 587;
+    private static final String Username = "tutorreact@gmail.com";
+    private static final String Password = "tvzjdbqpbhaclhna";
+    private static final String Auth = "true";
+    private static final String StartTls = "true";
+    private static final String Debug = "true";
+    private static final String Protocol = "smtp";
 
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-
-        mailSender.setHost(mailServerHost);
-        mailSender.setPort(mailServerPort);
-
-        mailSender.setUsername(mailServerUsername);
-        mailSender.setPassword(mailServerPassword);
+        mailSender.setHost(Host);
+        mailSender.setPort(Port);
+        mailSender.setUsername(Username);
+        mailSender.setPassword(Password);
 
         Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", mailServerAuth);
-        props.put("mail.smtp.starttls.enable", mailServerStartTls);
-        props.put("mail.debug", "true");
+        props.put("mail.transport.protocol", Protocol);
+        props.put("mail.smtp.auth", Auth);
+        props.put("mail.smtp.starttls.enable", StartTls);
+        props.put("mail.debug", Debug);
 
         return mailSender;
     }
 
     @Bean
     public SimpleMailMessage templateSimpleMessage() {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setText("This is the test email template for your email:\n%s\n");
-        return message;
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        return mailMessage;
     }
 
-    @Bean
-    public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
-        templateEngine.setTemplateEngineMessageSource(emailMessageSource());
-        return templateEngine;
-    }
-
-    @Bean
-    public ITemplateResolver thymeleafClassLoaderTemplateResolver() {
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix(mailTemplatesPath + "/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML");
-        templateResolver.setCharacterEncoding("UTF-8");
-        return templateResolver;
-    }
-
-//    @Bean
-//    public ITemplateResolver thymeleafFilesystemTemplateResolver() {
-//        FileTemplateResolver templateResolver = new FileTemplateResolver();
-//        templateResolver.setPrefix(mailTemplatesPath + "/");
-//        templateResolver.setSuffix(".html");
-//        templateResolver.setTemplateMode("HTML");
-//        templateResolver.setCharacterEncoding("UTF-8");
-//        return templateResolver;
-//    }
-
-
-
-    @Bean
-    public ResourceBundleMessageSource emailMessageSource() {
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("mailMessages");
-        return messageSource;
-    }
 }

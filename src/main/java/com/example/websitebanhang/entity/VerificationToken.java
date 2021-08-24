@@ -2,7 +2,6 @@ package com.example.websitebanhang.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,14 +10,10 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-
+@Entity
+@Table
 public class VerificationToken{
     private static final int EXPIRATION = 60 * 24;
-
-    public VerificationToken(String token, User user) {
-        this.token = token;
-        this.user = user;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,6 +24,7 @@ public class VerificationToken{
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
+
     private Date expiryDate;
 
     private Date calculateExpiryDate(int expiryTimeInMinutes) {
@@ -36,5 +32,10 @@ public class VerificationToken{
         cal.setTime(new Timestamp(cal.getTime().getTime()));
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
+    }
+
+    public VerificationToken(String token, User user) {
+        this.token = token;
+        this.user = user;
     }
 }

@@ -18,13 +18,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Service
+@Component
 public class UserService implements IUserService {
 
     private final AuthenticationManager authenticationManager;
@@ -37,29 +36,29 @@ public class UserService implements IUserService {
 
     private final IRoleRepository roleRepository;
 
-    //private final IVerificationTokenRepository tokenRepository;
+    private final IVerificationTokenRepository tokenRepository;
 
     public UserService(AuthenticationManager authenticationManager,
                        JwtUtils jwtUtils, IUserRepository userRepository,
                        PasswordEncoder encoder, IRoleRepository roleRepository,
-                       IVerificationTokenRepository tokenRepository) {
-
+                       IVerificationTokenRepository tokenRepository
+    ) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.roleRepository = roleRepository;
-        //this.tokenRepository = tokenRepository;
+        this.tokenRepository = tokenRepository;
     }
 
-//    @Override
-//    @Transactional
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        User user = userRepository.findByUsername(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-//
-//        return UserDetailsImpl.build(user);
-//    }
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+
+        return UserDetailsImpl.build(user);
+    }
 
 
     @Override
@@ -101,21 +100,21 @@ public class UserService implements IUserService {
     public void saveRegisteredUser(User user) {
         userRepository.save(user);
     }
-//
-//    @Override
-//    public User getUser(String verificationToken) {
-//        User user = tokenRepository.findByToken(verificationToken).getUser();
-//        return user;
-//    }
-//
-//    @Override
-//    public void createVerificationToken(User user, String token) {
-//        VerificationToken myToken = new VerificationToken(token, user);
-//        tokenRepository.save(myToken);
-//    }
-//
-//    @Override
-//    public VerificationToken getVerificationToken(String VerificationToken) {
-//        return tokenRepository.findByToken(VerificationToken);
-//    }
+
+    @Override
+    public User getUser(String verificationToken) {
+        User user = tokenRepository.findByToken(verificationToken).getUser();
+        return user;
+    }
+
+    @Override
+    public void createVerificationToken(User user, String token) {
+        VerificationToken myToken = new VerificationToken(token, user);
+        tokenRepository.save(myToken);
+    }
+
+    @Override
+    public VerificationToken getVerificationToken(String VerificationToken) {
+        return tokenRepository.findByToken(VerificationToken);
+    }
 }

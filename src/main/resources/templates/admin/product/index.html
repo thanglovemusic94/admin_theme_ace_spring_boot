@@ -13,7 +13,7 @@
 <div class="col-xs-12" layout:fragment="content">
     <!-- PAGE CONTENT BEGINS -->
     <p>
-        <button class="btn" data-toggle="modal" data-target="#add-product">
+        <button class="btn" data-toggle="modal" data-target="#add-product" >
             <i class="ace-icon fa fa-pencil align-top bigger-125"></i>
             Add
         </button>
@@ -141,8 +141,6 @@
 </div><!-- /.col -->
 
 <th:block layout:fragment="script">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
     <!-- inline scripts related to this page -->
     <script type="text/javascript">
         /*<![CDATA[*/
@@ -191,7 +189,6 @@
                 console.log(error);
             })
         }
-
         const getProductDetail = (id) => {
             $('#add-product').modal('show')
             axios.get('/getProductDetail',{
@@ -200,7 +197,6 @@
                 }
             }).then(function (res) {
                 getDataDetail(res.data.id, res.data.name,res.data.price)
-                // getProduct();
             }).catch(function (error) {
                 console.log(error);
             })

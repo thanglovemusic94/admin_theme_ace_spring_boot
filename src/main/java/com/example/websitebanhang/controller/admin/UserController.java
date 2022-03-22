@@ -55,8 +55,8 @@ public class UserController {
 
         User user = userService.registerNewUserAccount(signUpRequest);
 
-        String appUrl = request.getContextPath();
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
+//        String appUrl = request.getContextPath();
+//        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

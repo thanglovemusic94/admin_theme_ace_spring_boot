@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -65,6 +66,7 @@ public class UserService implements IUserService {
     public JwtResponse login(LoginDTO loginDTO) throws JsonProcessingException {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         //SecurityContextHolder.getContext().getAuthentication().getDetails();
         String jwt = jwtUtils.generateJwtToken(authentication);
         return new JwtResponse(jwt);
